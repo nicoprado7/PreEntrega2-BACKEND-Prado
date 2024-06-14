@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos (tiempo real)</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>E-COMMERCE</h1>
+    <h2>Lista de Productos (tiempo real)</h2>
+
+    <form id="add-product-form">
+        <input type="text" name="title" placeholder="Title" required>
+        <input type="text" name="description" placeholder="Description" required>
+        <input type="number" name="price" placeholder="Price" required>
+        <input type="text" name="code" placeholder="Code" required>
+        <input type="number" name="stock" placeholder="Stock" required>
+        <input type="text" name="category" placeholder="Category" required>
+        <br>
+        <button type="submit">Agregar producto</button>
+    </form>
+    <ul id="products-list">
+        {{#each products}}
+            <li>{{this.title}} - {{this.description}} - {{this.price}} - {{this.code}} - {{this.stock}} - {{this.category}} <button onclick="eliminarProducto('{{this.id}}')">Eliminar</button></li>
+        {{/each}}
+    </ul>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        // Función para eliminar un producto
+        function eliminarProducto(productId) {
+            fetch(`/product/delete/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    socket.emit('deleteProduct', productId);
+                } else {
+                    console.error('Error al eliminar el producto');
+                }
+            })
+            .catch(error => {
+                console.error('Error al eliminar el producto:', error);
+            });
+        }
+
+        // Actualizar la lista de productos en tiempo real
+        socket.on('updateProducts', (products) => {
+            const productsList = document.getElementById('products-list');
+            productsList.innerHTML = '';
+            products.forEach(product => {
+                const li = document.createElement('li');
+                li.innerHTML =
+                `-TITLE: ${product.title} <br>
+                -DESCRIPTION: ${product.description} <br>
+                -PRICE: $ ${product.price} <br>
+                -CODE: ${product.code} <br>
+                -STOCK: ${product.stock} <br>
+                -CATEGORY: ${product.category}
+                <button onclick="eliminarProducto('${product.id}')">Eliminar</button>`;
+                productsList.appendChild(li);
+            });
+        });
+
+        // Manejar el envío del formulario para agregar un nuevo producto
+        document.getElementById('add-product-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const title = formData.get('title');
+            const description = formData.get('description');
+            const price = formData.get('price');
+            const code = formData.get('code');
+            const stock = formData.get('stock');
+            const category = formData.get('category');
+
+            socket.emit('addProduct', { title, description, price, code, stock, category });
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>

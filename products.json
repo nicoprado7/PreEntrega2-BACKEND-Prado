@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "title": "Remera",
+    "description": "kamikaze",
+    "price": "50000",
+    "code": "123abc",
+    "stock": "12",
+    "category": "Hombre",
+    "status": true,
+    "thumbnails": [
+      "imagen"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Bolso",
+    "description": "kamikaze",
+    "price": "120000",
+    "code": "321acc",
+    "stock": "10",
+    "category": "Accesorios",
+    "status": true,
+    "thumbnails": [
+      "imagen"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Gorro",
+    "description": "naranja",
+    "price": "25000",
+    "code": "321aqw",
+    "stock": "30",
+    "category": "Accesorios",
+    "status": true,
+    "thumbnails": [
+      "imagen"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Remera",
+    "description": "eminem rose",
+    "price": "45000",
+    "code": "333aqw",
+    "stock": "23",
+    "category": "Mujer",
+    "status": true,
+    "thumbnails": [
+      "imagen"
+    ]
+  }
+]
